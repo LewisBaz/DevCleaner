@@ -23,6 +23,34 @@ struct ActionsFactory {
     func create() -> [ActionModel] {
         [
             .init(
+                action: .init(source: .folder(.clearDerivedData)),
+                name: "Clear Derived Data"
+            ),
+            .init(
+                action: .init(source: .folder(.clearArchives)),
+                name: "Clear Archives"
+            ),
+            .init(
+                action: .init(source: .folder(.clearIOSDeviceSupport)),
+                name: "Clear iOS Device Support"
+            ),
+            .init(
+                action: .init(source: .folder(.clearWatchOSDeviceSupport)),
+                name: "Clear watchOS Device Support"
+            ),
+            .init(
+                action: .init(source: .folder(.clearTVOSDeviceSupport)),
+                name: "Clear tvOS Device Support"
+            ),
+            .init(
+                action: .init(source: .folder(.clearXcodeCaches)),
+                name: "Clear Xcode Caches"
+            ),
+            .init(
+                action: .init(source: .folder(.clearCaches)),
+                name: "Clear Caches"
+            ),
+            .init(
                 action: .init(source: .shell(.removeOldSimulators)),
                 name: "Remove Old Simulators"
             ),
@@ -39,8 +67,8 @@ struct ActionsFactory {
                 name: "Remove Cocoa Pods Cache"
             ),
             .init(
-                action: .init(source: .shell(.cleanBin)),
-                name: "Clean Trash"
+                action: .init(source: .shell(.clearTrash)),
+                name: "Clear Trash"
             )
         ]
     }

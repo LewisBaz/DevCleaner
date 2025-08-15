@@ -17,6 +17,11 @@ enum ActionStatus: Equatable {
     case failed
 }
 
+enum ActionPerformingError: Error {
+    case directoryNotFound
+    case removeFileFailure(_ path: String)
+}
+
 protocol ActionPerforming {
     init(action: Action)
     func perform() -> AsyncThrowingStream<ActionStatus, Error>
@@ -39,10 +44,32 @@ final class ActionPerformer: ActionPerforming {
     }
 
     private func performFolderAction(_ source: Source.Folder) -> AsyncThrowingStream<ActionStatus, Error> {
+        let path = pathForAction(source)
+        guard let items = try? FileManager.default.contentsOfDirectory(atPath: path)
+        else { return
+            AsyncThrowingStream { continuation in
+                continuation.finish(throwing: ActionPerformingError.directoryNotFound)
+            }
+        }
+        let totalCount = items.count
         return AsyncThrowingStream { continuation in
             Task {
                 continuation.yield(.running(0))
-                try await Task.sleep(nanoseconds: 1_000_000_000)
+                if totalCount == 0 {
+                    continuation.yield(.completed)
+                    continuation.finish()
+                    return
+                }
+                for (index, item) in items.enumerated() {
+                    let fullPath = (path as NSString).appendingPathComponent(item)
+                    do {
+                        try FileManager.default.removeItem(atPath: fullPath)
+                        let progress = Double(index + 1) / Double(totalCount) * 100
+                        continuation.yield(.running(progress))
+                    } catch {
+                        throw ActionPerformingError.removeFileFailure(fullPath)
+                    }
+                }
                 continuation.yield(.completed)
                 continuation.finish()
             }
@@ -70,10 +97,27 @@ final class ActionPerformer: ActionPerforming {
         }
     }
 
+    private func pathForAction(_ source: Source.Folder) -> String {
+        switch source {
+        case .clearDerivedData:
+            return "/Users/\(NSUserName())/Library/Developer/Xcode/DerivedData"
+        case .clearXcodeCaches:
+            return "/Users/\(NSUserName())/Library/Developer/CoreSimulator/Caches"
+        case .clearArchives:
+            return "/Users/\(NSUserName())/Library/Developer/Xcode/Archives"
+        case .clearIOSDeviceSupport:
+            return "/Users/\(NSUserName())/Library/Developer/Xcode/iOS DeviceSupport"
+        case .clearWatchOSDeviceSupport:
+            return "/Users/\(NSUserName())/Library/Developer/Xcode/watchOS DeviceSupport"
+        case .clearTVOSDeviceSupport:
+            return "/Users/\(NSUserName())/Library/Developer/Xcode/tvOS DeviceSupport"
+        case .clearCaches:
+            return "/Users/\(NSUserName())/Library/Caches"
+        }
+    }
+
     private func shellCommandForAction(_ source: Source.Shell) -> (String, [String]) {
         switch source {
-        case .cleanBin:
-            return ("/usr/bin/osascript", ["-e", "tell application \"Finder\" to empty the trash"])
         case .removeOldSimulators:
             return ("/usr/bin/xcrun", ["simctl", "delete", "unavailable"])
         case .removeSimulatorPreviews:
@@ -82,6 +126,8 @@ final class ActionPerformer: ActionPerforming {
             return ("/usr/bin/xcrun", ["simctl", "erase", "all"])
         case .removeCocoaPodsCache:
             return ("/bin/bash", ["-c", "if command -v pod &> /dev/null; then pod cache clean --all; else echo 'CocoaPods not installed'; fi"])
+        case .clearTrash:
+            return ("/usr/bin/osascript", ["-e", "tell application \"Finder\" to empty the trash"])
         }
     }
 }

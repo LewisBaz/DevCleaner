@@ -12,8 +12,7 @@ enum Source {
     case shell(Shell)
 
     enum Folder {
-        case cleanDownloads
-        case cleanDerivedData
+        case clearDerivedData
         case clearXcodeCaches
         case clearArchives
         case clearIOSDeviceSupport
@@ -27,6 +26,6 @@ enum Source {
         case removeSimulatorPreviews
         case removeSimulatorsData
         case removeCocoaPodsCache
-        case cleanBin
+        case clearTrash
     }
 }
