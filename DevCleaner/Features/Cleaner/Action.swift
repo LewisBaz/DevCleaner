@@ -68,7 +68,17 @@ struct ActionsFactory {
             ),
             .init(
                 action: .init(source: .shell(.clearTrash)),
-                name: "Clear Trash"
+                name: "Clear Trash",
+                divider: true
+            ),
+            .init(
+                action: .init(source: .other(.clearAll)),
+                name: "Clear All",
+                divider: true
+            ),
+            .init(
+                action: .init(source: .other(.quit)),
+                name: "Quit"
             )
         ]
     }

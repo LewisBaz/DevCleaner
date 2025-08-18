@@ -9,6 +9,7 @@ import Foundation
 import AppKit
 import ServiceManagement
 import SwiftUI
+import os
 
 enum ActionStatus: Equatable {
     case initial
@@ -18,17 +19,16 @@ enum ActionStatus: Equatable {
 }
 
 enum ActionPerformingError: Error {
-    case directoryNotFound
-    case removeFileFailure(_ path: String)
+    case directoryNotFound(_ path: String)
 }
 
-protocol ActionPerforming {
-    init(action: Action)
-    func perform() -> AsyncThrowingStream<ActionStatus, Error>
+enum PerformerSpecialCaseError: Error {
+    case quitApp
 }
 
-final class ActionPerformer: ActionPerforming {
+struct ActionPerformer: Sendable {
     private let action: Action
+    private let logger = Logger(subsystem: "devcleaner", category: "ActionPerformer")
 
     init(action: Action) {
         self.action = action
@@ -40,6 +40,13 @@ final class ActionPerformer: ActionPerforming {
             return performFolderAction(folder)
         case .shell(let shell):
             return performShellAction(shell)
+        case .other(let other):
+            switch other {
+            case .clearAll:
+                return performClearAllAction()
+            case .quit:
+                return performQuitApp()
+            }
         }
     }
 
@@ -48,16 +55,18 @@ final class ActionPerformer: ActionPerforming {
         guard let items = try? FileManager.default.contentsOfDirectory(atPath: path)
         else { return
             AsyncThrowingStream { continuation in
-                continuation.finish(throwing: ActionPerformingError.directoryNotFound)
+                continuation.finish(throwing: ActionPerformingError.directoryNotFound(path))
             }
         }
         let totalCount = items.count
         return AsyncThrowingStream { continuation in
             Task {
+                logger.info("action \(path) started")
                 continuation.yield(.running(0))
                 if totalCount == 0 {
                     continuation.yield(.completed)
                     continuation.finish()
+                    logger.info("action \(path) finished without any files to remove")
                     return
                 }
                 for (index, item) in items.enumerated() {
@@ -67,11 +76,12 @@ final class ActionPerformer: ActionPerforming {
                         let progress = Double(index + 1) / Double(totalCount) * 100
                         continuation.yield(.running(progress))
                     } catch {
-                        throw ActionPerformingError.removeFileFailure(fullPath)
+                        logger.info("action \(path) throw remove file error")
                     }
                 }
                 continuation.yield(.completed)
                 continuation.finish()
+                logger.info("action \(path) finished")
             }
         }
     }
@@ -80,6 +90,7 @@ final class ActionPerformer: ActionPerforming {
         let (launchPath, arguments) = shellCommandForAction(source)
         return AsyncThrowingStream { continuation in
             Task {
+                logger.info("action at \(launchPath) with arguments \(arguments) started")
                 continuation.yield(.running(0))
                 let task = Process()
                 task.launchPath = launchPath
@@ -93,6 +104,7 @@ final class ActionPerformer: ActionPerforming {
                 task.waitUntilExit()
                 continuation.yield(.completed)
                 continuation.finish()
+                logger.info("action at \(launchPath) with arguments \(arguments) finished")
             }
         }
     }
@@ -128,6 +140,48 @@ final class ActionPerformer: ActionPerforming {
             return ("/bin/bash", ["-c", "if command -v pod &> /dev/null; then pod cache clean --all; else echo 'CocoaPods not installed'; fi"])
         case .clearTrash:
             return ("/usr/bin/osascript", ["-e", "tell application \"Finder\" to empty the trash"])
+        }
+    }
+
+    private func performClearAllAction() -> AsyncThrowingStream<ActionStatus, Error> {
+        return AsyncThrowingStream { continuation in
+            Task {
+                let allActions: [ActionPerformer] =
+                Source.Folder.allCases.map { ActionPerformer(action: .init(source: .folder($0))) } +
+                Source.Shell.allCases.map { ActionPerformer(action: .init(source: .shell($0))) }
+                let total = allActions.count
+                var completed = 0
+
+                for performer in allActions {
+                    do {
+                        for try await status in performer.perform() {
+                            switch status {
+                            case .running(_):
+                                break
+                            case .completed, .failed:
+                                completed += 1
+                                let overall = Double(completed) / Double(total) * 100
+                                continuation.yield(.running(overall))
+                            default:
+                                break
+                            }
+                        }
+                    }
+                    catch {
+                        completed += 1
+                        let overall = Double(completed) / Double(total) * 100
+                        continuation.yield(.running(overall))
+                    }
+                }
+                continuation.yield(.completed)
+                continuation.finish()
+            }
+        }
+    }
+
+    private func performQuitApp() -> AsyncThrowingStream<ActionStatus, Error> {
+        return AsyncThrowingStream<ActionStatus, Error> { continuation in
+            continuation.finish(throwing: PerformerSpecialCaseError.quitApp)
         }
     }
 }

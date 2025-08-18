@@ -24,17 +24,19 @@ struct ContentView: View {
                 }
             }
         }
-        .onAppear {
-            NSApp.setActivationPolicy(.accessory)
-        }
     }
 
-    private func performAction(_ performer: ActionPerforming) async {
+    private func performAction(_ performer: ActionPerformer) async {
         Task {
-            for try await status in performer.perform() {
-                await MainActor.run {
-                    self.status = status
+            do {
+                for try await status in performer.perform() {
+                    await MainActor.run {
+                        self.status = status
+                    }
                 }
+            }
+            catch is PerformerSpecialCaseError {
+                NSApplication.shared.terminate(self)
             }
         }
     }

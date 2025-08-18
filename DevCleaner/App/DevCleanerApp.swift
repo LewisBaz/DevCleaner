@@ -29,7 +29,6 @@ struct DevCleanerApp: App {
                 actionProgress = 100
                 hideWindow()
             case .failed:
-                print("error")
                 hideWindow()
             }
         }

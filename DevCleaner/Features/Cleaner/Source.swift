@@ -10,8 +10,9 @@ import Foundation
 enum Source {
     case folder(Folder)
     case shell(Shell)
+    case other(Other)
 
-    enum Folder {
+    enum Folder: CaseIterable {
         case clearDerivedData
         case clearXcodeCaches
         case clearArchives
@@ -21,11 +22,16 @@ enum Source {
         case clearCaches
     }
 
-    enum Shell {
+    enum Shell: CaseIterable {
         case removeOldSimulators
         case removeSimulatorPreviews
         case removeSimulatorsData
         case removeCocoaPodsCache
         case clearTrash
+    }
+
+    enum Other {
+        case clearAll
+        case quit
     }
 }
