@@ -24,61 +24,61 @@ struct ActionsFactory {
         [
             .init(
                 action: .init(source: .folder(.clearDerivedData)),
-                name: "Clear Derived Data"
+                name: LocalizedString("Action.DerivedData")
             ),
             .init(
                 action: .init(source: .folder(.clearArchives)),
-                name: "Clear Archives"
+                name: LocalizedString("Action.Archives")
             ),
             .init(
                 action: .init(source: .folder(.clearIOSDeviceSupport)),
-                name: "Clear iOS Device Support"
+                name: LocalizedString("Action.Device.iOS")
             ),
             .init(
                 action: .init(source: .folder(.clearWatchOSDeviceSupport)),
-                name: "Clear watchOS Device Support"
+                name: LocalizedString("Action.Device.watchOS")
             ),
             .init(
                 action: .init(source: .folder(.clearTVOSDeviceSupport)),
-                name: "Clear tvOS Device Support"
+                name: LocalizedString("Action.Device.tvOS")
             ),
             .init(
                 action: .init(source: .folder(.clearXcodeCaches)),
-                name: "Clear Xcode Caches"
+                name: LocalizedString("Action.XcodeCaches")
             ),
             .init(
                 action: .init(source: .folder(.clearCaches)),
-                name: "Clear Caches"
+                name: LocalizedString("Action.Caches")
             ),
             .init(
                 action: .init(source: .shell(.removeOldSimulators)),
-                name: "Remove Old Simulators"
+                name: LocalizedString("Action.OldSimulators")
             ),
             .init(
                 action: .init(source: .shell(.removeSimulatorPreviews)),
-                name: "Remove Simulator Previews"
+                name: LocalizedString("Action.SimulatorPreviews")
             ),
             .init(
                 action: .init(source: .shell(.removeSimulatorsData)),
-                name: "Remove Simulators Data"
+                name: LocalizedString("Action.SimulatorData")
             ),
             .init(
                 action: .init(source: .shell(.removeCocoaPodsCache)),
-                name: "Remove Cocoa Pods Cache"
+                name: LocalizedString("Action.CocoaPods")
             ),
             .init(
                 action: .init(source: .shell(.clearTrash)),
-                name: "Clear Trash",
+                name: LocalizedString("Action.Trash"),
                 divider: true
             ),
             .init(
                 action: .init(source: .other(.clearAll)),
-                name: "Clear All",
+                name: LocalizedString("Action.ClearAll"),
                 divider: true
             ),
             .init(
                 action: .init(source: .other(.quit)),
-                name: "Quit"
+                name: LocalizedString("Action.Quit")
             )
         ]
     }

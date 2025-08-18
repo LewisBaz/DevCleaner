@@ -151,26 +151,25 @@ struct ActionPerformer: Sendable {
                 Source.Shell.allCases.map { ActionPerformer(action: .init(source: .shell($0))) }
                 let total = allActions.count
                 var completed = 0
+                var onComplete: (() -> Void) = {
+                    completed += 1
+                    let overall = Double(completed) / Double(total) * 100
+                    continuation.yield(.running(overall))
+                }
 
                 for performer in allActions {
                     do {
                         for try await status in performer.perform() {
                             switch status {
-                            case .running(_):
-                                break
                             case .completed, .failed:
-                                completed += 1
-                                let overall = Double(completed) / Double(total) * 100
-                                continuation.yield(.running(overall))
+                                onComplete()
                             default:
                                 break
                             }
                         }
                     }
                     catch {
-                        completed += 1
-                        let overall = Double(completed) / Double(total) * 100
-                        continuation.yield(.running(overall))
+                        onComplete()
                     }
                 }
                 continuation.yield(.completed)

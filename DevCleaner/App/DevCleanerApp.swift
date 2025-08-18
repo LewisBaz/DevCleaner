@@ -18,7 +18,7 @@ struct DevCleanerApp: App {
         MenuBarExtra(LocalizedString("AppName"), systemImage: "externaldrive.fill") {
             ContentView(status: $actionStatus)
         }
-        .onChange(of: actionStatus) { oldValue, newValue in
+        .onChange(of: actionStatus) { _, newValue in
             switch newValue {
             case .initial:
                 break
@@ -47,7 +47,6 @@ struct DevCleanerApp: App {
             window = newWindow
         }
         window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     private func hideWindow() {
