@@ -16,22 +16,6 @@ DevCleaner is a lightweight macOS utility that helps you free up disk space by r
    - If your Mac has no development certificate, the script automatically falls back to local ad-hoc signing.
 4. Open app: `open /Applications/DevCleaner.app`
 5. If macOS asks for confirmation, allow it in Settings > Privacy & Security.
-
-### Distribution
-#### Build release artifact (ZIP)
-1. Run `chmod +x scripts/package-release.sh`
-2. Run `./scripts/package-release.sh`
-3. Share `DevCleaner-<version>.zip` from `dist/`
-4. Optional DMG: `CREATE_DMG=1 ./scripts/package-release.sh`
-
-#### Optional: sign artifacts
-Use your Developer ID certificate:
-`SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" ./scripts/package-release.sh`
-
-#### Publish flow (recommended)
-1. Upload `DevCleaner-<version>.zip` from `dist/` to GitHub Releases.
-2. Add SHA256 checksums shown by the script to release notes.
-3. Instruct users to install by unzipping `DevCleaner.app` and moving it to `/Applications`.
 ### Usage
 1. Launch DevCleaner.
 2. Select DevCleaner at top bar.
