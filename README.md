@@ -9,14 +9,40 @@ DevCleaner is a lightweight macOS utility that helps you free up disk space by r
 ### Compatibility
 - Require macOS 15.x and higher.
 ### Installation
-1. Download ZIP.
-2. Open DevCleaner/Application.
-3. Confirm opening in Settings > Privacy & Security
-4. Run App.
+#### Option 1: Install from terminal (recommended)
+1. Clone repository.
+2. Run `chmod +x scripts/install.sh && ./scripts/install.sh`
+   - If your Mac has no development certificate, the script automatically falls back to local ad-hoc signing.
+3. Open app: `open /Applications/DevCleaner.app`
+4. If macOS asks for confirmation, allow it in Settings > Privacy & Security.
+
+#### Option 2: Install from ZIP
+1. Download `DevCleaner-<version>.zip` from Releases.
+2. Unpack archive (`double click` or `unzip DevCleaner-<version>.zip`).
+3. Move `DevCleaner.app` to `/Applications`.
+4. Open app: `open /Applications/DevCleaner.app`
+5. If macOS asks for confirmation, allow it in Settings > Privacy & Security.
+
+### Distribution
+#### Build release artifact (ZIP)
+1. Run `chmod +x scripts/package-release.sh`
+2. Run `./scripts/package-release.sh`
+3. Share `DevCleaner-<version>.zip` from `dist/`
+4. Optional DMG: `CREATE_DMG=1 ./scripts/package-release.sh`
+
+#### Optional: sign artifacts
+Use your Developer ID certificate:
+`SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)" ./scripts/package-release.sh`
+
+#### Publish flow (recommended)
+1. Upload `DevCleaner-<version>.zip` from `dist/` to GitHub Releases.
+2. Add SHA256 checksums shown by the script to release notes.
+3. Instruct users to install by unzipping `DevCleaner.app` and moving it to `/Applications`.
 ### Usage
 1. Launch DevCleaner.
 2. Select DevCleaner at top bar.
-3. Delete what you prefer or clean all. 
+3. Enable `Launch at Login` in the menu to keep the app available after reboot.
+4. Delete what you prefer or clean all.
 ### Why DevCleaner?
 Xcode generates large amounts of cached and temporary data that is rarely cleaned up automatically. Over time, this can consume tens or even hundreds of gigabytes of disk space. DevCleaner provides a simple, safe, and efficient way to regain that storage.
 ### Contributing

@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
 
     @Binding var status: ActionStatus
+    @StateObject private var launchAtLoginService = LaunchAtLoginService()
 
     var body: some View {
         VStack {
@@ -23,6 +24,14 @@ struct ContentView: View {
                     Divider()
                 }
             }
+            Divider()
+            Toggle(
+                LocalizedString("Action.LaunchAtLogin"),
+                isOn: Binding(
+                    get: { launchAtLoginService.isEnabled },
+                    set: { launchAtLoginService.setEnabled($0) }
+                )
+            )
         }
     }
 
