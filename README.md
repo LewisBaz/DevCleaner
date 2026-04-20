@@ -11,15 +11,9 @@ DevCleaner is a lightweight macOS utility that helps you free up disk space by r
 ### Installation
 #### Option 1: Install from terminal (recommended)
 1. Clone repository.
-2. Run `chmod +x scripts/install.sh && ./scripts/install.sh`
+2. Open repository `cd DevCleaner`
+3. Run `chmod +x scripts/install.sh && ./scripts/install.sh`
    - If your Mac has no development certificate, the script automatically falls back to local ad-hoc signing.
-3. Open app: `open /Applications/DevCleaner.app`
-4. If macOS asks for confirmation, allow it in Settings > Privacy & Security.
-
-#### Option 2: Install from ZIP
-1. Download `DevCleaner-<version>.zip` from Releases.
-2. Unpack archive (`double click` or `unzip DevCleaner-<version>.zip`).
-3. Move `DevCleaner.app` to `/Applications`.
 4. Open app: `open /Applications/DevCleaner.app`
 5. If macOS asks for confirmation, allow it in Settings > Privacy & Security.
 
