@@ -1,6 +1,6 @@
 cask "dev-cleaner" do
   version "1.0.0"
-  sha256 "a68e03bc54e49a6c3f36a2813c2f71863990e8fc6e70049bc5614fea629808e7"
+  sha256 "be6fc58a6e7847478cfc302fdf4a76d922c700468d78f86aecf488ccd53b2382"
 
   url "https://github.com/LewisBaz/DevCleaner/releases/download/v#{version}/DevCleaner-#{version}.zip"
   name "DevCleaner"
