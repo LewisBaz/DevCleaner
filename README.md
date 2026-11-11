@@ -11,6 +11,15 @@ DevCleaner is a lightweight macOS utility that helps you free up disk space by r
 ### Installation
 #### Option 1: Homebrew (recommended)
 ```bash
+git clone https://github.com/LewisBaz/DevCleaner.git
+cd DevCleaner
+chmod +x scripts/brew-install.sh
+./scripts/brew-install.sh
+```
+This taps the cask, installs it, and self-heals the common "Homebrew thinks it's installed but the app is missing" state (e.g. after you removed the app by hand instead of via `brew uninstall`) automatically. Read the script before running it, as with any install script.
+
+If you'd rather run the steps yourself:
+```bash
 brew tap LewisBaz/devcleaner https://github.com/LewisBaz/DevCleaner
 brew install --cask dev-cleaner
 open /Applications/DevCleaner.app
@@ -19,13 +28,9 @@ open /Applications/DevCleaner.app
 > - The cask token is `dev-cleaner` (hyphenated), not `devcleaner` — that name is already taken in Homebrew's official cask repository by an unrelated app.
 > - If install fails with `Refusing to load cask ... from untrusted tap` (some Homebrew versions require explicit trust for third-party taps), run `brew trust --cask lewisbaz/devcleaner/dev-cleaner` and retry.
 > - DevCleaner is signed with an ad-hoc signature, not notarized by Apple, so the first launch will be blocked by Gatekeeper. Allow it once with `xattr -cr /Applications/DevCleaner.app`, or right-click the app in Finder and choose Open.
+> - If you removed the app manually and `brew install`/`brew upgrade` now seems to do nothing, run `brew reinstall --cask dev-cleaner` (or just re-run the script above).
 
 To update later: `brew upgrade --cask dev-cleaner`. To remove: `brew uninstall --cask dev-cleaner`.
-
-> **Troubleshooting:** if you removed the app manually (e.g. dragged it to Trash) and later `brew install`/`brew upgrade` seems to do nothing, or `open /Applications/DevCleaner.app` says the file doesn't exist — Homebrew still thinks it's installed. Fix it with:
-> ```bash
-> brew reinstall --cask dev-cleaner
-> ```
 
 #### Option 2: Install from terminal
 1. Clone repository.
