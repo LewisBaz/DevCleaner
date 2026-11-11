@@ -1,13 +1,13 @@
 cask "dev-cleaner" do
   version "1.0.0"
-  sha256 "792264db88a177170155a6e4d18564d5e7534f24edbf35b1825fed8013df5dca"
+  sha256 "a68e03bc54e49a6c3f36a2813c2f71863990e8fc6e70049bc5614fea629808e7"
 
   url "https://github.com/LewisBaz/DevCleaner/releases/download/v#{version}/DevCleaner-#{version}.zip"
   name "DevCleaner"
   desc "Menu bar utility for clearing Xcode caches, DerivedData, simulators and more"
   homepage "https://github.com/LewisBaz/DevCleaner"
 
-  depends_on macos: ">= :sequoia"
+  depends_on macos: :sequoia
 
   app "DevCleaner.app"
 
