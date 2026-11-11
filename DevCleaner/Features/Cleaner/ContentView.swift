@@ -47,10 +47,15 @@ struct ContentView: View {
             catch is PerformerSpecialCaseError {
                 NSApplication.shared.terminate(self)
             }
+            catch {
+                await MainActor.run {
+                    self.status = .failed(reason: error.localizedDescription)
+                }
+            }
         }
     }
 }
 
 #Preview {
-    ContentView(status: .init(get: { .completed }, set: { _ in }))
+    ContentView(status: .init(get: { .completed(bytesFreed: 0) }, set: { _ in }))
 }

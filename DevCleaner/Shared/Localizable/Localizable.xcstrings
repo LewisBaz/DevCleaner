@@ -176,6 +176,50 @@
           }
         }
       }
+    },
+    "Status.CommandFailed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Command exited with status %d"
+          }
+        }
+      }
+    },
+    "Status.FolderNotFound" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder not found: %@"
+          }
+        }
+      }
+    },
+    "Status.Freed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Freed %@"
+          }
+        }
+      }
+    },
+    "Status.NothingToClean" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing to clean"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

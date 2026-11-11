@@ -12,7 +12,6 @@ struct DevCleanerApp: App {
 
     @State private var window: NSWindow?
     @State private var actionStatus: ActionStatus = .initial
-    @State private var actionProgress: Double = 0
 
     var body: some Scene {
         MenuBarExtra(LocalizedString("AppName"), systemImage: "externaldrive.fill") {
@@ -22,23 +21,19 @@ struct DevCleanerApp: App {
             switch newValue {
             case .initial:
                 break
-            case .running(let progress):
+            case .running:
                 showWindow()
-                actionProgress = progress
-            case .completed:
-                actionProgress = 100
-                hideWindow()
-            case .failed:
-                hideWindow()
+            case .completed, .failed:
+                scheduleHideWindow()
             }
         }
     }
 
     private func showWindow() {
         if window == nil {
-            let contentView = NSHostingView(rootView: LoadingView(progress: $actionProgress))
+            let contentView = NSHostingView(rootView: LoadingView(status: $actionStatus))
             let newWindow = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: 400, height: 300),
+                contentRect: NSRect(x: 0, y: 0, width: 300, height: 160),
                 styleMask: [.titled, .closable, .resizable],
                 backing: .buffered, defer: false)
             newWindow.center()
@@ -49,9 +44,9 @@ struct DevCleanerApp: App {
         window?.makeKeyAndOrderFront(nil)
     }
 
-    private func hideWindow() {
+    private func scheduleHideWindow() {
         Task {
-            try await Task.sleep(for: .milliseconds(500))
+            try? await Task.sleep(for: .milliseconds(1500))
             await MainActor.run {
                 window?.orderOut(nil)
             }
