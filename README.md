@@ -12,15 +12,13 @@ DevCleaner is a lightweight macOS utility that helps you free up disk space by r
 #### Option 1: Homebrew (recommended)
 ```bash
 brew tap LewisBaz/devcleaner https://github.com/LewisBaz/DevCleaner
-brew trust --cask lewisbaz/devcleaner/dev-cleaner
 brew install --cask dev-cleaner
 open /Applications/DevCleaner.app
 ```
 > Notes:
 > - The cask token is `dev-cleaner` (hyphenated), not `devcleaner` — that name is already taken in Homebrew's official cask repository by an unrelated app.
-> - `brew trust` is required because this is a third-party tap, not Homebrew's own cask repository. Skipping it will fail with "Refusing to load cask ... from untrusted tap".
-
-DevCleaner is signed with an ad-hoc signature (not notarized by Apple), so the first launch will be blocked by Gatekeeper. Allow it once with `xattr -cr /Applications/DevCleaner.app`, or right-click the app in Finder and choose Open.
+> - If install fails with `Refusing to load cask ... from untrusted tap` (some Homebrew versions require explicit trust for third-party taps), run `brew trust --cask lewisbaz/devcleaner/dev-cleaner` and retry.
+> - DevCleaner is signed with an ad-hoc signature, not notarized by Apple. The cask clears the Gatekeeper quarantine flag automatically on install; if macOS still blocks the first launch, right-click the app in Finder and choose Open.
 
 To update later: `brew upgrade --cask dev-cleaner`. To remove: `brew uninstall --cask dev-cleaner`.
 

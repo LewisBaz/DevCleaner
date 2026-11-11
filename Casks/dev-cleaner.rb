@@ -11,12 +11,9 @@ cask "dev-cleaner" do
 
   app "DevCleaner.app"
 
-  caveats <<~EOS
-    DevCleaner is signed with an ad-hoc signature (not notarized by Apple),
-    so macOS Gatekeeper will block the first launch. Allow it once with:
-
-      xattr -cr "#{appdir}/DevCleaner.app"
-
-    or right-click the app in Finder and choose Open.
-  EOS
+  postflight do
+    system_command "/usr/bin/xattr",
+                    args: ["-cr", "#{appdir}/DevCleaner.app"],
+                    sudo: false
+  end
 end
