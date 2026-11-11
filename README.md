@@ -9,7 +9,17 @@ DevCleaner is a lightweight macOS utility that helps you free up disk space by r
 ### Compatibility
 - Require macOS 15.x and higher.
 ### Installation
-#### Option 1: Install from terminal (recommended)
+#### Option 1: Homebrew (recommended)
+```bash
+brew tap LewisBaz/devcleaner https://github.com/LewisBaz/DevCleaner
+brew install --cask devcleaner
+open /Applications/DevCleaner.app
+```
+DevCleaner is signed with an ad-hoc signature (not notarized by Apple), so the first launch will be blocked by Gatekeeper. Allow it once with `xattr -cr /Applications/DevCleaner.app`, or right-click the app in Finder and choose Open.
+
+To update later: `brew upgrade --cask devcleaner`. To remove: `brew uninstall --cask devcleaner`.
+
+#### Option 2: Install from terminal
 1. Clone repository.
 2. Open repository `cd DevCleaner`
 3. Run `chmod +x scripts/install.sh && ./scripts/install.sh`
