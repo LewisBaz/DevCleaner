@@ -22,6 +22,11 @@ open /Applications/DevCleaner.app
 
 To update later: `brew upgrade --cask dev-cleaner`. To remove: `brew uninstall --cask dev-cleaner`.
 
+> **Troubleshooting:** if you removed the app manually (e.g. dragged it to Trash) and later `brew install`/`brew upgrade` seems to do nothing, or `open /Applications/DevCleaner.app` says the file doesn't exist — Homebrew still thinks it's installed. Fix it with:
+> ```bash
+> brew reinstall --cask dev-cleaner
+> ```
+
 #### Option 2: Install from terminal
 1. Clone repository.
 2. Open repository `cd DevCleaner`
