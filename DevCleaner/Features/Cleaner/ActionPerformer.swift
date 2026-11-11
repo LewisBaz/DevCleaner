@@ -99,7 +99,14 @@ struct ActionPerformer: Sendable {
                 let pipe = Pipe()
                 task.standardOutput = pipe
                 task.standardError = pipe
-                task.launch()
+                do {
+                    try task.run()
+                } catch {
+                    logger.info("action at \(launchPath) with arguments \(arguments) failed to launch")
+                    continuation.yield(.completed)
+                    continuation.finish()
+                    return
+                }
                 continuation.yield(.running(20))
                 task.waitUntilExit()
                 continuation.yield(.completed)
@@ -151,7 +158,7 @@ struct ActionPerformer: Sendable {
                 Source.Shell.allCases.map { ActionPerformer(action: .init(source: .shell($0))) }
                 let total = allActions.count
                 var completed = 0
-                var onComplete: (() -> Void) = {
+                let onComplete: (() -> Void) = {
                     completed += 1
                     let overall = Double(completed) / Double(total) * 100
                     continuation.yield(.running(overall))
