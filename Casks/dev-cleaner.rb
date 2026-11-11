@@ -1,4 +1,4 @@
-cask "devcleaner" do
+cask "dev-cleaner" do
   version "1.0.0"
   sha256 "792264db88a177170155a6e4d18564d5e7534f24edbf35b1825fed8013df5dca"
 
